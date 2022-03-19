@@ -1,4 +1,4 @@
-{{log productLabels}}
+{{!-- {{log productLabels}} --}}
 
 {{! TODO: Add on change action }}
 {{! TODO: Add tooltip warning if nothing is selected }}
@@ -8,10 +8,9 @@
   valueProperty=null
   nameProperty=null
   closeOnChange=true
-  value=this.value
-  maximum=1
-  none=(theme-prefix 'cribl_tiered_tags.no_products')
+  value=selectedProduct
   onChange=(action 'updateProductTags')
+  options=(hash none=(theme-prefix 'cribl_tiered_tags.no_products') maximum=1)
 }}
 
 {{#if showVersions}}
@@ -19,7 +18,8 @@
     content=productVersions
     valueProperty=null
     nameProperty=null
-    value=this.value
-    none=(theme-prefix 'cribl_tiered_tags.no_versions')
+    value=model.versions
+    onChange=(action 'updateProductVersions')
+    options=(hash none=(theme-prefix 'cribl_tiered_tags.no_versions'))
   }}
 {{/if}}

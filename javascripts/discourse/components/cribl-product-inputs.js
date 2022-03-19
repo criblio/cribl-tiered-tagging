@@ -30,6 +30,14 @@ export default Component.extend({
     });
   },
 
+  attachTags(tags) {
+    if (this.model.tags) {
+      this.model.tags.push(...tags);
+    } else {
+      this.model.set('tags', tags);
+    }
+  },
+
   actions: {
     updateProductTags(product) {
       this.set('selectedProduct', product);
@@ -39,8 +47,22 @@ export default Component.extend({
       ).versions;
       this.set('showVersions', true);
       const versions = productVersions.map((v) => v.id);
-      console.log(versions);
+      console.log('versions', versions);
       this.set('productVersions', versions);
+      this.attachTags(product);
+      console.log('model', this.model);
+    },
+
+    updateProductVersions(version) {
+      this.attachTags(version);
+
+      // if (this.model.versions) {
+      //   this.model.versions.push(...version);
+      // } else {
+      this.model.set('versions', version);
+      // }
+
+      console.log('model versions', this.model);
     },
   },
 });
