@@ -1,0 +1,14 @@
+.cribl-product-tags {
+  margin-bottom: 8px;
+  div {
+    display: flex;
+    gap: 8px;
+    color: var(--primary-high);
+    width: 100%;
+
+    details {
+      flex: 49%;
+      flex-grow: 0;
+    }
+  }
+}

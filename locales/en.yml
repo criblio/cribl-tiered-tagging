@@ -1,0 +1,6 @@
+en:
+  theme_metadata:
+    description: 'Cribl forced tiered tagging'
+  cribl_tiered_tags:
+    no_products: 'Product'
+    no_versions: 'Version(s)'

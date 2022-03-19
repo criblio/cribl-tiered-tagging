@@ -1,0 +1,25 @@
+{{log productLabels}}
+
+{{! TODO: Add on change action }}
+{{! TODO: Add tooltip warning if nothing is selected }}
+
+{{multi-select
+  content=productLabels
+  valueProperty=null
+  nameProperty=null
+  closeOnChange=true
+  value=this.value
+  maximum=1
+  none=(theme-prefix 'cribl_tiered_tags.no_products')
+  onChange=(action 'updateProductTags')
+}}
+
+{{#if showVersions}}
+  {{multi-select
+    content=productVersions
+    valueProperty=null
+    nameProperty=null
+    value=this.value
+    none=(theme-prefix 'cribl_tiered_tags.no_versions')
+  }}
+{{/if}}

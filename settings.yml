@@ -1,0 +1,5 @@
+product_tag_group:
+  type: string
+  default: ''
+  description:
+    en: 'Select the tag group that contains all of Cribls Products'
