@@ -31,30 +31,35 @@ export default Component.extend({
   },
 
   attachTags(tags) {
-    if (this.model.tags) {
-      this.model.tags.push(...tags);
-    } else {
-      this.model.set('tags', tags);
-    }
+    // if (this.model.tags) {
+    //   this.model.tags.push(...tags);
+    // } else {
+    this.model.set('tags', tags);
+    // }
   },
 
   actions: {
     updateProductTags(product) {
       this.set('selectedProduct', product);
       const products = this.get('products');
+      // TODO IMPROVE below:
       const productVersions = products.find(
         (p) => p.id === product[0]
       ).versions;
       this.set('showVersions', true);
       const versions = productVersions.map((v) => v.id);
-      console.log('versions', versions);
+      this.model.set('product', product);
       this.set('productVersions', versions);
-      this.attachTags(product);
+      // this.attachTags(product);
       console.log('model', this.model);
+      // TODO if the product is cleared, remove the version tags
     },
 
     updateProductVersions(version) {
-      this.attachTags(version);
+      let product = this.get('selectedProduct');
+      console.log('Version', version);
+      // product.push(...version);
+      // this.attachTags((product = new Set()));
 
       // if (this.model.versions) {
       //   this.model.versions.push(...version);
