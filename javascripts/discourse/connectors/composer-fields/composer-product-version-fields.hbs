@@ -1,11 +1,9 @@
-{{! TODO: Add tooltip warning if nothing is selected }}
-
 {{multi-select
   content=productLabels
   valueProperty=null
   nameProperty=null
   closeOnChange=true
-  value=selectedProduct
+  value=model.product
   onChange=(action 'updateProductTags')
   options=(hash none=(theme-prefix 'cribl_tiered_tags.no_products') maximum=1)
 }}
@@ -16,7 +14,8 @@
     valueProperty=null
     nameProperty=null
     value=model.versions
-    onChange=(action 'updateProductVersions')
+    onChange=(action 'updateVersionTags')
     options=(hash none=(theme-prefix 'cribl_tiered_tags.no_versions'))
   }}
 {{/if}}
+{{! TODO: Add tooltip warning if nothing is selected }}

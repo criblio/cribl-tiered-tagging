@@ -1,6 +1,6 @@
 import Component from '@ember/component';
 import { ajax } from 'discourse/lib/ajax';
-import { undasherize } from '../lib/string-helpers';
+import { undasherize } from '../lib/field-helpers';
 
 export default Component.extend({
   didInsertElement() {
