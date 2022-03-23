@@ -4,3 +4,5 @@ en:
   cribl_tiered_tags:
     no_products: 'Product'
     no_versions: 'Version(s)'
+    product_validation: 'You must include a product tag'
+    version_validation: 'You must include a version tag'

@@ -1,10 +1,15 @@
+import EmberObject from '@ember/object';
+import { getOwner } from 'discourse-common/lib/get-owner';
+import discourseComputed from 'discourse-common/utils/decorators';
 import { ajax } from 'discourse/lib/ajax';
 import { apiInitializer } from 'discourse/lib/api';
+import I18n from 'I18n';
 import { arrayNotEmpty, isDefined, undasherize } from '../lib/field-helpers';
 
 export default apiInitializer('0.11.1', (api) => {
   const PRODUCT_FIELD_NAME = 'product';
   const VERSION_FIELD_NAME = 'versions';
+  const PLUGIN_ID = 'cribl-tiered-tagging';
 
   function findProductVersions(products, product) {
     const productVersions = products.find((p) => p.id === product[0]).versions;
@@ -53,6 +58,29 @@ export default apiInitializer('0.11.1', (api) => {
             this.set('showVersions', true);
           }
         });
+
+        const controller = getOwner(this).lookup('controller:composer');
+        component.set('productValidation', controller.get('productValidation'));
+        component.set('versionValidation', controller.get('versionValidation'));
+        controller.addObserver('productValidation', () => {
+          if (this._state === 'destroying') {
+            return;
+          }
+          component.set(
+            'productValidation',
+            controller.get('productValidation')
+          );
+        });
+
+        controller.addObserver('versionValidation', () => {
+          if (this._state === 'destroying') {
+            return;
+          }
+          component.set(
+            'versionValidation',
+            controller.get('versionValidation')
+          );
+        });
       },
 
       actions: {
@@ -69,7 +97,6 @@ export default apiInitializer('0.11.1', (api) => {
           }
 
           console.log('model', this.model);
-          // TODO if the product is cleared, remove the version tags
         },
 
         updateVersionTags(version) {
@@ -89,6 +116,49 @@ export default apiInitializer('0.11.1', (api) => {
       },
     }
   );
+
+  api.modifyClass('model:composer', {
+    pluginId: PLUGIN_ID,
+
+    save(opts) {
+      if (this.tags) {
+        this.tags.push(...this.product, ...this.versions);
+      } else {
+        if (this.product && this.version) {
+          this.set('tags', [...this.product, ...this.versions]);
+        }
+      }
+
+      return this._super(...arguments);
+    },
+  });
+
+  api.modifyClass('controller:composer', {
+    pluginId: PLUGIN_ID,
+
+    @discourseComputed('model.product', 'lastValidatedAt')
+    productValidation(product, lastValidatedAt) {
+      if (!isDefined(product) || !arrayNotEmpty(product)) {
+        return EmberObject.create({
+          failed: true,
+          reason: I18n.t(themePrefix('cribl_tiered_tags.product_validation')),
+          lastShownAt: lastValidatedAt,
+        });
+      }
+    },
+
+    @discourseComputed('model.versions', 'lastValidatedAt')
+    versionValidation(versions, lastValidatedAt) {
+      console.log('versions', versions);
+      if (!isDefined(versions) || !arrayNotEmpty(versions)) {
+        return EmberObject.create({
+          failed: true,
+          reason: I18n.t(themePrefix('cribl_tiered_tags.version_validation')),
+          lastShownAt: lastValidatedAt,
+        });
+      }
+    },
+  });
 
   api.serializeOnCreate(PRODUCT_FIELD_NAME);
   api.serializeOnCreate(VERSION_FIELD_NAME);
