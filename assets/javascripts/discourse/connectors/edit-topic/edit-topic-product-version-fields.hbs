@@ -1,20 +1,47 @@
-{{multi-select
-  content=productLabels
-  valueProperty=null
-  nameProperty=null
-  closeOnChange=true
-  value=model.product
-  options=(hash none='cribl_tiered_tags.no_products' maximum=1)
-}}
-{{popup-input-tip validation=productValidation}}
-
-{{#if showVersions}}
+<div class='product-version-field-container'>
   {{multi-select
-    content=productVersions
+    content=productLabels
     valueProperty=null
     nameProperty=null
-    value=model.versions
-    options=(hash none='cribl_tiered_tags.no_versions')
+    closeOnChange=true
+    value=model.product
+    onChange=(action 'updateProductTags')
+    options=(hash none='cribl_tiered_tagging.product.none' maximum=1)
   }}
-  {{popup-input-tip validation=versionValidation}}
-{{/if}}
+  <div class='desc'>
+    {{i18n 'cribl_tiered_tagging.product.input_description'}}
+  </div>
+  {{popup-input-tip validation=productValidation}}
+</div>
+
+<div class='product-version-field-container'>
+  {{#if showVersions}}
+    {{multi-select
+      content=productVersions
+      valueProperty=null
+      nameProperty=null
+      value=model.versions
+      onChange=(action 'updateVersionTags')
+      options=(hash none='cribl_tiered_tagging.version.none')
+    }}
+    <div class='desc'>
+      {{i18n 'cribl_tiered_tagging.version.input_description'}}
+    </div>
+
+    {{popup-input-tip validation=versionValidation}}
+  {{/if}}
+</div>
+
+<div class='product-version-field-container'>
+  {{mini-tag-chooser
+    value=buffered.plainTags
+    onChange=(action 'updatePlainTags')
+    options=(hash
+      filterable=true
+      categoryId=buffered.category_id
+      minimum=minimumRequiredTags
+    )
+  }}
+  <div class='desc'>Other Tags</div>
+  {{! TODO Add Validation }}
+</div>

@@ -5,7 +5,7 @@
   closeOnChange=true
   value=model.product
   onChange=(action 'updateProductTags')
-  options=(hash none='cribl_tiered_tagging.no_products' maximum=1)
+  options=(hash none='cribl_tiered_tagging.product.none' maximum=1)
 }}
 {{popup-input-tip validation=productValidation}}
 
@@ -16,7 +16,7 @@
     nameProperty=null
     value=model.versions
     onChange=(action 'updateVersionTags')
-    options=(hash none='cribl_tiered_tagging.no_versions')
+    options=(hash none='cribl_tiered_tagging.version.none')
   }}
   {{popup-input-tip validation=versionValidation}}
 {{/if}}
