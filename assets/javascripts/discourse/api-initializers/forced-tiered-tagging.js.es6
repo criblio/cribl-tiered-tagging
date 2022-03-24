@@ -10,6 +10,7 @@ export default apiInitializer('0.11.1', (api) => {
   const PRODUCT_FIELD_NAME = 'product';
   const VERSION_FIELD_NAME = 'versions';
   const PLUGIN_ID = 'cribl-tiered-tagging';
+  const siteSettings = api.container.lookup('site-settings:main');
 
   function findProductVersions(products, product) {
     const productVersions = products.find((p) => p.id === product[0]).versions;
@@ -31,7 +32,7 @@ export default apiInitializer('0.11.1', (api) => {
           const productLabels = [];
 
           const productsTagGroup = tagGroups.find(
-            (t) => t.name === settings.product_tag_group
+            (t) => t.name === siteSettings.cribl_product_tag_group
           );
 
           const products = productsTagGroup.tags;
@@ -102,14 +103,7 @@ export default apiInitializer('0.11.1', (api) => {
         updateVersionTags(version) {
           let product = this.get('selectedProduct');
           console.log('Version', version);
-          // product.push(...version);
-          // this.attachTags((product = new Set()));
-
-          // if (this.model.versions) {
-          //   this.model.versions.push(...version);
-          // } else {
           this.model.set('versions', version);
-          // }
 
           console.log('model versions', this.model);
         },
@@ -128,7 +122,6 @@ export default apiInitializer('0.11.1', (api) => {
           this.set('tags', [...this.product, ...this.versions]);
         }
       }
-
       return this._super(...arguments);
     },
   });
@@ -141,7 +134,7 @@ export default apiInitializer('0.11.1', (api) => {
       if (!isDefined(product) || !arrayNotEmpty(product)) {
         return EmberObject.create({
           failed: true,
-          reason: I18n.t(themePrefix('cribl_tiered_tags.product_validation')),
+          reason: I18n.t('cribl_tiered_tagging.product_validation'),
           lastShownAt: lastValidatedAt,
         });
       }
@@ -153,7 +146,7 @@ export default apiInitializer('0.11.1', (api) => {
       if (!isDefined(versions) || !arrayNotEmpty(versions)) {
         return EmberObject.create({
           failed: true,
-          reason: I18n.t(themePrefix('cribl_tiered_tags.version_validation')),
+          reason: I18n.t('cribl_tiered_tagging.version_validation'),
           lastShownAt: lastValidatedAt,
         });
       }
@@ -166,4 +159,24 @@ export default apiInitializer('0.11.1', (api) => {
   api.serializeToDraft(VERSION_FIELD_NAME);
   api.serializeToTopic(PRODUCT_FIELD_NAME, `topic.${PRODUCT_FIELD_NAME}`);
   api.serializeToTopic(VERSION_FIELD_NAME, `topic.${VERSION_FIELD_NAME}`);
+
+  api.registerConnectorClass(
+    'edit-topic',
+    'edit-topic-product-version-fields',
+    {
+      setupComponent(attrs, component) {
+        const model = attrs.model;
+        console.log(
+          'edit topic: model',
+          model,
+          'attrs',
+          attrs,
+          'component',
+          component
+        );
+      },
+
+      actions: {},
+    }
+  );
 });
