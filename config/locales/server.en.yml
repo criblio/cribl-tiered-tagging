@@ -1,0 +1,4 @@
+en:
+  site_settings:
+    cribl_tiered_tagging_enabled: 'Enable the Cribl Tiered Tagging Plugin'
+    cribl_product_tag_group: 'Select the tag group that contains all of Cribls Products'

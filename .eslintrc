@@ -1,7 +1,3 @@
 {
   "extends": "eslint-config-discourse",
-  "globals": {
-    "settings": "readonly",
-    "themePrefix": "readonly"
-  }
 }

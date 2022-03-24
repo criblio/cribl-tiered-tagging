@@ -1,0 +1,20 @@
+{{multi-select
+  content=productLabels
+  valueProperty=null
+  nameProperty=null
+  closeOnChange=true
+  value=model.product
+  options=(hash none='cribl_tiered_tags.no_products' maximum=1)
+}}
+{{popup-input-tip validation=productValidation}}
+
+{{#if showVersions}}
+  {{multi-select
+    content=productVersions
+    valueProperty=null
+    nameProperty=null
+    value=model.versions
+    options=(hash none='cribl_tiered_tags.no_versions')
+  }}
+  {{popup-input-tip validation=versionValidation}}
+{{/if}}

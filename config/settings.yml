@@ -1,0 +1,8 @@
+plugins:
+  cribl_tiered_tagging_enabled:
+    default: true
+    client: true
+  cribl_product_tag_group:
+    type: string
+    default: 'Cribl Products'
+    client: true

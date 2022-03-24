@@ -1,0 +1,7 @@
+en:
+  js:
+    cribl_tiered_tagging:
+      no_products: 'Product'
+      no_versions: 'Version(s)'
+      product_validation: 'You must include a product tag'
+      version_validation: 'You must include a version tag'
