@@ -3,6 +3,7 @@ import { getOwner } from 'discourse-common/lib/get-owner';
 import discourseComputed from 'discourse-common/utils/decorators';
 import { ajax } from 'discourse/lib/ajax';
 import { apiInitializer } from 'discourse/lib/api';
+import showModal from 'discourse/lib/show-modal';
 import I18n from 'I18n';
 import { arrayNotEmpty, isDefined, undasherize } from '../lib/field-helpers';
 
@@ -14,7 +15,6 @@ export default apiInitializer('0.11.1', (api) => {
   const siteSettings = api.container.lookup('site-settings:main');
 
   function findProductVersions(products, product) {
-    console.log('p(s)', products, 'p', product);
     const productVersions = products.find((p) => p.id === product[0]).versions;
     const versions = productVersions.map((v) => v.id);
     return versions;
@@ -97,16 +97,11 @@ export default apiInitializer('0.11.1', (api) => {
             this.set('productVersions', versions);
             this.set('showVersions', true);
           }
-
-          console.log('model', this.model);
         },
 
         updateVersionTags(version) {
           let product = this.get('selectedProduct');
-          console.log('Version', version);
           this.model.set('versions', version);
-
-          console.log('model versions', this.model);
         },
       },
     }
@@ -124,7 +119,6 @@ export default apiInitializer('0.11.1', (api) => {
           this.set('tags', [...this.product, ...this.versions]);
         }
       }
-      console.log('save', this);
 
       return this._super(...arguments);
     },
@@ -146,7 +140,6 @@ export default apiInitializer('0.11.1', (api) => {
 
     @discourseComputed('model.versions', 'lastValidatedAt')
     versionValidation(versions, lastValidatedAt) {
-      console.log('versions', versions);
       if (!isDefined(versions) || !arrayNotEmpty(versions)) {
         return EmberObject.create({
           failed: true,
@@ -163,17 +156,6 @@ export default apiInitializer('0.11.1', (api) => {
     {
       setupComponent(attrs, component) {
         const model = attrs.model;
-
-        console.log(
-          'edit topic: model',
-          model,
-          'attrs',
-          attrs,
-          'component',
-          component,
-          'this',
-          this
-        );
 
         ajax(`/tags.json`).then(({ extras }) => {
           const tagGroups = extras.tag_groups;
@@ -207,6 +189,29 @@ export default apiInitializer('0.11.1', (api) => {
             this.set('showVersions', true);
           }
         });
+
+        const controller = getOwner(this).lookup('controller:topic');
+        component.set('productValidation', controller.get('productValidation'));
+        component.set('versionValidation', controller.get('versionValidation'));
+        controller.addObserver('productValidation', () => {
+          if (this._state === 'destroying') {
+            return;
+          }
+          component.set(
+            'productValidation',
+            controller.get('productValidation')
+          );
+        });
+
+        controller.addObserver('versionValidation', () => {
+          if (this._state === 'destroying') {
+            return;
+          }
+          component.set(
+            'versionValidation',
+            controller.get('versionValidation')
+          );
+        });
       },
 
       actions: {
@@ -221,21 +226,15 @@ export default apiInitializer('0.11.1', (api) => {
             this.set('productVersions', versions);
             this.set('showVersions', true);
           }
-
-          console.log('model', this.model);
         },
 
         updateVersionTags(version) {
           let product = this.get('selectedProduct');
-          console.log('Version', version);
           this.model.set('versions', version);
-
-          console.log('model versions', this.model);
         },
 
         updatePlainTags(tags) {
           this.set('buffered.plainTags', tags);
-          console.log('tags', this.model, this, tags);
         },
       },
     }
@@ -246,8 +245,30 @@ export default apiInitializer('0.11.1', (api) => {
 
     actions: {
       finishedEditingTopic() {
-        console.log('THIS', this, 'model', this.model);
         const plainTags = this.get('buffered.plainTags');
+
+        if (
+          !isDefined(this.model.product) ||
+          !arrayNotEmpty(this.model.product)
+        ) {
+          return showModal('edit-topic-error', {
+            title: 'cribl_tiered_tagging.error',
+            model: {
+              errorMessage: I18n.t('cribl_tiered_tagging.product.validation'),
+            },
+          });
+        } else if (
+          !isDefined(this.model.versions) ||
+          !arrayNotEmpty(this.model.versions)
+        ) {
+          return showModal('edit-topic-error', {
+            title: 'cribl_tiered_tagging.error',
+            model: {
+              errorMessage: I18n.t('cribl_tiered_tagging.version.validation'),
+            },
+          });
+        }
+
         this.buffered.set('tags', [
           ...plainTags,
           ...this.model.product,

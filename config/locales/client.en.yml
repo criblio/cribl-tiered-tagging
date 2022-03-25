@@ -9,3 +9,4 @@ en:
         input_description: 'Version'
         none: 'Version'
         validation: 'You must include a version tag'
+      error: 'Please fix the following errors'
