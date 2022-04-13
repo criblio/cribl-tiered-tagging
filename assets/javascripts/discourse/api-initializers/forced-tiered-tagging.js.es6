@@ -246,6 +246,7 @@ export default apiInitializer('0.11.1', (api) => {
     actions: {
       finishedEditingTopic() {
         const plainTags = this.get('buffered.plainTags');
+        console.log('this', this.model);
 
         if (
           !isDefined(this.model.product) ||
@@ -270,7 +271,7 @@ export default apiInitializer('0.11.1', (api) => {
         }
 
         this.buffered.set('tags', [
-          ...plainTags,
+          ...(plainTags || []),
           ...this.model.product,
           ...this.model.versions,
         ]);
