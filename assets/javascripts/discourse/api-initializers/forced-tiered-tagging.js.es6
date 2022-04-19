@@ -222,6 +222,7 @@ export default apiInitializer('0.11.1', (api) => {
         updateProductTags(product) {
           this.set('selectedProduct', product);
           this.model.set('product', product);
+          this.set('product', product);
           this.model.set('versions', []);
           const products = this.get('products');
 
@@ -235,6 +236,7 @@ export default apiInitializer('0.11.1', (api) => {
         updateVersionTags(version) {
           let product = this.get('selectedProduct');
           this.model.set('versions', version);
+          this.set('versions', version);
         },
 
         updatePlainTags(tags) {
