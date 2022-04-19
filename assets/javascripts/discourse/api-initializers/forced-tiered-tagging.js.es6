@@ -111,12 +111,16 @@ export default apiInitializer('0.11.1', (api) => {
     pluginId: PLUGIN_ID,
 
     save(opts) {
-      if (this.tags) {
-        this.plainTags = this.tags;
-        this.set('tags', [...this.tags, ...this.product, ...this.versions]);
+      const product = this.product;
+      const versions = this.versions;
+      const tags = this.tags;
+
+      if (tags) {
+        this.plainTags = tags;
+        this.set('tags', [...tags, ...product, ...versions]);
       } else {
-        if (this.product && this.version) {
-          this.set('tags', [...this.product, ...this.versions]);
+        if (product && versions) {
+          this.set('tags', [...product, ...versions]);
         }
       }
 
@@ -245,8 +249,7 @@ export default apiInitializer('0.11.1', (api) => {
 
     actions: {
       finishedEditingTopic() {
-        const plainTags = this.get('buffered.plainTags');
-        console.log('this', this.model);
+        const plainTags = this.get('buffered.plainTags') || [];
 
         if (
           !isDefined(this.model.product) ||
@@ -271,7 +274,7 @@ export default apiInitializer('0.11.1', (api) => {
         }
 
         this.buffered.set('tags', [
-          ...(plainTags || []),
+          ...plainTags,
           ...this.model.product,
           ...this.model.versions,
         ]);
