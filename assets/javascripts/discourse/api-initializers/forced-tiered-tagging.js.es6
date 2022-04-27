@@ -2,6 +2,7 @@ import EmberObject from '@ember/object';
 import { getOwner } from 'discourse-common/lib/get-owner';
 import discourseComputed from 'discourse-common/utils/decorators';
 import { ajax } from 'discourse/lib/ajax';
+import { popupAjaxError } from 'discourse/lib/ajax-error';
 import { apiInitializer } from 'discourse/lib/api';
 import showModal from 'discourse/lib/show-modal';
 import I18n from 'I18n';
@@ -194,6 +195,9 @@ export default apiInitializer('0.11.1', (api) => {
           }
         });
 
+        component.set('product', model.get('product'));
+        component.set('versions', model.get('versions'));
+
         const controller = getOwner(this).lookup('controller:topic');
         component.set('productValidation', controller.get('productValidation'));
         component.set('versionValidation', controller.get('versionValidation'));
@@ -222,7 +226,8 @@ export default apiInitializer('0.11.1', (api) => {
         updateProductTags(product) {
           this.set('selectedProduct', product);
           this.model.set('product', product);
-          this.set('product', product);
+          this.set('buffered.product', product);
+
           this.model.set('versions', []);
           const products = this.get('products');
 
@@ -235,8 +240,9 @@ export default apiInitializer('0.11.1', (api) => {
 
         updateVersionTags(version) {
           let product = this.get('selectedProduct');
+
           this.model.set('versions', version);
-          this.set('versions', version);
+          this.set('buffered.versions', version);
         },
 
         updatePlainTags(tags) {
@@ -252,6 +258,8 @@ export default apiInitializer('0.11.1', (api) => {
     actions: {
       finishedEditingTopic() {
         const plainTags = this.get('buffered.plainTags') || [];
+        const product = this.get('buffered.product') || [];
+        const versions = this.get('buffered.versions') || [];
 
         if (
           !isDefined(this.model.product) ||
@@ -274,6 +282,19 @@ export default apiInitializer('0.11.1', (api) => {
             },
           });
         }
+
+        this.buffered.set('product', product);
+        this.buffered.set('versions', versions);
+        this.buffered.set('plainTags', plainTags);
+
+        ajax(`/t/${this.model.id}`, {
+          type: 'PUT',
+          data: {
+            plainTags,
+            versions,
+            product,
+          },
+        }).catch(popupAjaxError);
 
         this.buffered.set('tags', [
           ...plainTags,
