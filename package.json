@@ -1,4 +1,5 @@
 {
+  "name": "cribl-tiered-tagging",
   "author": "keegangeorge",
   "license": "MIT",
   "devDependencies": {
