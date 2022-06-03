@@ -70,3 +70,4 @@ after_initialize do
       object.send(field[:name])
     end
   end
+end
