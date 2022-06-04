@@ -1,22 +1,24 @@
-{{multi-select
-  content=productLabels
-  valueProperty=null
-  nameProperty=null
-  closeOnChange=true
-  value=model.product
-  onChange=(action 'updateProductTags')
-  options=(hash none='cribl_tiered_tagging.product.none' maximum=1)
-}}
-{{popup-input-tip validation=productValidation}}
-
-{{#if showVersions}}
+{{#unless model.replyingToTopic}}
   {{multi-select
-    content=productVersions
+    content=productLabels
     valueProperty=null
     nameProperty=null
-    value=model.versions
-    onChange=(action 'updateVersionTags')
-    options=(hash none='cribl_tiered_tagging.version.none')
+    closeOnChange=true
+    value=model.product
+    onChange=(action "updateProductTags")
+    options=(hash none="cribl_tiered_tagging.product.none" maximum=1)
   }}
-  {{popup-input-tip validation=versionValidation}}
-{{/if}}
+  {{popup-input-tip validation=productValidation}}
+
+  {{#if showVersions}}
+    {{multi-select
+      content=productVersions
+      valueProperty=null
+      nameProperty=null
+      value=model.versions
+      onChange=(action "updateVersionTags")
+      options=(hash none="cribl_tiered_tagging.version.none")
+    }}
+    {{popup-input-tip validation=versionValidation}}
+  {{/if}}
+{{/unless}}
