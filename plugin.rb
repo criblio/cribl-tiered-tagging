@@ -2,7 +2,7 @@
 
 # name: cribl-tiered-tagging
 # about: Discourse plugin require Product and Version tagging when posting
-# version: 0.1
+# version: 1.0
 # authors: Keegan George
 # contact email: keegan@pavilion.tech
 # url: https://github.com/paviliondev/cribl-tiered-tagging
