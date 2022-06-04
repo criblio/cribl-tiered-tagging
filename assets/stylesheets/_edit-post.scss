@@ -1,0 +1,24 @@
+.composer-action-edit {
+  .mini-tag-chooser {
+    display: none;
+  }
+
+  .composer-product-version-fields {
+    flex-wrap: wrap;
+
+    .multi-select {
+      flex: 25%;
+    }
+
+    .plain-tag-chooser {
+      display: block;
+      flex: 100%;
+      margin: 0 !important;
+    }
+  }
+}
+
+#reply-control.composer-action-edit .with-tags .title-input {
+  flex: 15%;
+  margin-right: 8px;
+}

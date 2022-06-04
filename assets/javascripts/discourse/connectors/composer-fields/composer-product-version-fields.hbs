@@ -1,22 +1,38 @@
-{{multi-select
-  content=productLabels
-  valueProperty=null
-  nameProperty=null
-  closeOnChange=true
-  value=model.product
-  onChange=(action 'updateProductTags')
-  options=(hash none='cribl_tiered_tagging.product.none' maximum=1)
-}}
-{{popup-input-tip validation=productValidation}}
-
-{{#if showVersions}}
+{{#unless model.replyingToTopic}}
   {{multi-select
-    content=productVersions
-    valueProperty=null
-    nameProperty=null
-    value=model.versions
-    onChange=(action 'updateVersionTags')
-    options=(hash none='cribl_tiered_tagging.version.none')
+    content=products
+    valueProperty="name"
+    nameProperty="name"
+    value=model.product
+    onChange=(action "updateProductTags")
+    options=(hash none="cribl_tiered_tagging.product.none")
   }}
-  {{popup-input-tip validation=versionValidation}}
-{{/if}}
+  {{popup-input-tip validation=productValidation}}
+
+  {{#if showVersions}}
+    {{multi-select
+      content=versions
+      valueProperty="name"
+      nameProperty="name"
+      value=model.versions
+      onChange=(action "updateVersionTags")
+      options=(hash none="cribl_tiered_tagging.version.none")
+    }}
+    {{popup-input-tip validation=versionValidation}}
+  {{/if}}
+
+  {{#if model.editingPost}}
+    {{mini-tag-chooser
+      class="plain-tag-chooser"
+      value=model.plainTags
+      onChange=(action "updatePlainTags")
+      options=(hash
+        disabled=disableTagsChooser
+        categoryId=model.categoryId
+        minimum=model.minimumRequiredTags
+      )
+    }}
+    {{popup-input-tip validation=tagValidation}}
+  {{/if}}
+
+{{/unless}}

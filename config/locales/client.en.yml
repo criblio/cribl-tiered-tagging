@@ -2,11 +2,13 @@ en:
   js:
     cribl_tiered_tagging:
       product:
-        input_description: 'Product'
-        none: 'Product'
-        validation: 'You must include a product tag'
+        input_description: "Product"
+        none: "Product"
+        validation: "You must include a product tag"
       version:
-        input_description: 'Version'
-        none: 'Version'
-        validation: 'You must include a version tag'
-      error: 'Please fix the following errors'
+        input_description: "Version"
+        none: "Version"
+        validation: "You must include a version tag"
+      other:
+        input_description: "Other Tags"
+      error: "Please fix the following errors"
