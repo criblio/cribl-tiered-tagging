@@ -4,7 +4,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 export function buildDropdown(all, selected) {
   return all
     .filter((value) => selected.includes(value.name))
-    .map((value) => value.skills)
+    .map((value) => value.versions)
     .flat(1);
 }
 
