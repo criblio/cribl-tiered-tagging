@@ -33,10 +33,8 @@ export default {
 
     updateVersionTags(selected) {
       this.set("buffered.versions", selected);
-      console.log("selected", selected);
 
       if (selected.length < 1) {
-        console.log("reached");
         return this.set("buffered.versions", null);
       }
     },

@@ -2,7 +2,6 @@
 
 module CriblTieredTagging
   class ::ProductsController < ::ApplicationController
-    # TODO: Confirm is working correctly at /products.json
     def index
       data = []
       products_tag_group = SiteSetting.cribl_product_tag_group

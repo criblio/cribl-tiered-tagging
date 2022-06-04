@@ -29,7 +29,6 @@ export default apiInitializer("0.11.1", (api) => {
       }
 
       const tags = this.tags;
-      console.log("tags", tags);
 
       const addToTags = [];
 
@@ -60,6 +59,7 @@ export default apiInitializer("0.11.1", (api) => {
 
     @discourseComputed("model.product", "lastValidatedAt")
     productValidation(product, lastValidatedAt) {
+      console.log("product", product);
       if (!isDefined(product) || !arrayNotEmpty(product)) {
         return EmberObject.create({
           failed: true,
@@ -106,8 +106,6 @@ export default apiInitializer("0.11.1", (api) => {
             },
           });
         }
-
-        console.log("this.buffered", this.buffered);
 
         this.buffered.setProperties({
           product: productTags,
