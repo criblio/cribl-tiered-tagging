@@ -31,28 +31,36 @@ export function resetProperties(model, component) {
 
 export function setProductProps(context, all, selected) {
   const versions = buildDropdown(all, selected);
+
   return context.setProperties({
     showVersions: true,
     versions,
   });
 }
 
+// ? TODO REMOVE ?
+// export function setVersionProps(context, all, selected) {
+//   return context.setProperties({
+//     showVersions: true,
+//   })
+// }
+
 export function handlePrefillData(allData, context) {
   // Prefill Data when opening a draft/editing a topic
-
   const model = context.model;
 
   if (model.product) {
     context.set("product", model.product);
+    setProductProps(context, allData, model.product);
   }
 
-  if (model.version) {
-    // setVersionProps(context, allData, model.product);
+  if (model.versions) {
+    const allVersions = buildDropdown(allData, model.product);
+    context.set("versions", allVersions);
   }
 
   // Prefill otherTags input when editing old topics that don't only have regular tags
-
-  if (model.product === null && model.version === null && model.tags) {
+  if (model.product === null && model.versions === null && model.tags) {
     model.set("plainTags", model.tags);
   }
 }
