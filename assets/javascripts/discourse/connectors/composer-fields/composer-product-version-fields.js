@@ -11,6 +11,14 @@ export default {
 
   setupComponent(args, component) {
     prepareData(component);
+
+    if (component.model.editingPost) {
+      component.model.setProperties({
+        product: component.model.topic.product,
+        versions: component.model.topic.versions,
+        plainTags: component.model.topic.plainTags,
+      });
+    }
   },
 
   actions: {
@@ -25,7 +33,11 @@ export default {
     },
 
     updateVersionTags(selected) {
-      this.model.set("version", selected);
+      this.model.set("versions", selected);
+    },
+
+    updatePlainTags(selected) {
+      this.model.set("plainTags", selected);
     },
   },
 };

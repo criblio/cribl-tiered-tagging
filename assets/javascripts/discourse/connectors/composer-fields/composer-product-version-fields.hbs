@@ -14,10 +14,25 @@
       content=versions
       valueProperty="name"
       nameProperty="name"
-      value=model.version
+      value=model.versions
       onChange=(action "updateVersionTags")
       options=(hash none="cribl_tiered_tagging.version.none")
     }}
     {{popup-input-tip validation=versionValidation}}
   {{/if}}
+
+  {{#if model.editingPost}}
+    {{mini-tag-chooser
+      class="plain-tag-chooser"
+      value=model.plainTags
+      onChange=(action "updatePlainTags")
+      options=(hash
+        disabled=disableTagsChooser
+        categoryId=model.categoryId
+        minimum=model.minimumRequiredTags
+      )
+    }}
+    {{popup-input-tip validation=tagValidation}}
+  {{/if}}
+
 {{/unless}}

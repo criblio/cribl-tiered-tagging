@@ -22,13 +22,22 @@ export default apiInitializer("0.11.1", (api) => {
 
     save(opts) {
       const product = this.product;
-      const version = this.version;
+      const versions = this.versions;
+
+      if (this.editingPost) {
+        this.set("tags", this.plainTags);
+      }
+
       const tags = this.tags;
+      console.log("tags", tags);
 
       const addToTags = [];
 
       if (tags) {
-        this.plainTags = tags;
+        if (!this.editingPost) {
+          this.plainTags = tags;
+        }
+
         addToTags.push(...tags);
       }
 
@@ -36,8 +45,8 @@ export default apiInitializer("0.11.1", (api) => {
         addToTags.push(...product);
       }
 
-      if (version) {
-        addToTags.push(...version);
+      if (versions) {
+        addToTags.push(...versions);
       }
 
       this.set("tags", addToTags);
@@ -78,24 +87,18 @@ export default apiInitializer("0.11.1", (api) => {
     actions: {
       finishedEditingTopic() {
         const productTags = this.buffered.get("product") || [];
-        const versionTags = this.buffered.get("version") || [];
+        const versionTags = this.buffered.get("versions") || [];
         const plainTags = this.buffered.get("plainTags") || [];
         const allTags = [...productTags, ...versionTags, ...plainTags];
 
-        if (
-          !isDefined(this.model.product) ||
-          !arrayNotEmpty(this.model.product)
-        ) {
+        if (!isDefined(productTags) || !arrayNotEmpty(productTags)) {
           return showModal("edit-topic-error", {
             title: "cribl_tiered_tagging.error",
             model: {
               errorMessage: I18n.t("cribl_tiered_tagging.product.validation"),
             },
           });
-        } else if (
-          !isDefined(this.model.versions) ||
-          !arrayNotEmpty(this.model.versions)
-        ) {
+        } else if (!isDefined(versionTags) || !arrayNotEmpty(versionTags)) {
           return showModal("edit-topic-error", {
             title: "cribl_tiered_tagging.error",
             model: {
@@ -104,10 +107,7 @@ export default apiInitializer("0.11.1", (api) => {
           });
         }
 
-        this.buffered.set("product", productTags);
-        this.buffered.set("versions", versionTags);
-        this.buffered.set("plainTags", plainTags);
-        this.buffered.set("tags", allTags);
+        console.log("this.buffered", this.buffered);
 
         this.buffered.setProperties({
           product: productTags,
@@ -124,12 +124,6 @@ export default apiInitializer("0.11.1", (api) => {
             product: productTags,
           },
         }).catch(popupAjaxError);
-
-        this.buffered.set("tags", [
-          ...plainTags,
-          ...this.model.product,
-          ...this.model.versions,
-        ]);
 
         return this._super(...arguments);
       },

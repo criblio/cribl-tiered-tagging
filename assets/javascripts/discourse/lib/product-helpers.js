@@ -23,7 +23,7 @@ export function updateDependantDropdowns(context, buffered, all, action) {
 export function resetProperties(model, component) {
   model.setProperties({
     product: null,
-    version: null,
+    versions: null,
   });
 
   return component.set("showVersions", false);
@@ -37,13 +37,6 @@ export function setProductProps(context, all, selected) {
     versions,
   });
 }
-
-// ? TODO REMOVE ?
-// export function setVersionProps(context, all, selected) {
-//   return context.setProperties({
-//     showVersions: true,
-//   })
-// }
 
 export function handlePrefillData(allData, context) {
   // Prefill Data when opening a draft/editing a topic

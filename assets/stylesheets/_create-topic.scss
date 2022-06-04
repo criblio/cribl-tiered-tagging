@@ -1,13 +1,13 @@
 .composer-product-version-fields {
-    margin-bottom: 8px;
-    display: flex;
-    gap: 8px;
-    color: var(--primary-high);
-    width: 100%;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  color: var(--primary-high);
+  width: 100%;
 
-    .multi-select {
-        flex: 50%;
-        flex-grow: 0;
-    }
+  .multi-select {
+    flex: 50%;
+    flex-grow: 0;
+  }
 }
-    
