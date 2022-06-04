@@ -24,92 +24,93 @@ export default apiInitializer("0.11.1", (api) => {
     return versions;
   }
 
-  api.registerConnectorClass(
-    "composer-fields",
-    "composer-product-version-fields",
-    {
-      setupComponent(attrs, component) {
-        const model = attrs.model;
+  // TODO LATER:
+  // api.registerConnectorClass(
+  //   "composer-fields",
+  //   "composer-product-version-fields",
+  //   {
+  //     setupComponent(attrs, component) {
+  //       const model = attrs.model;
 
-        // Tag data for to dropdowns:
-        ajax(`/tags.json`).then(({ extras }) => {
-          const tagGroups = extras.tag_groups;
-          const productLabels = [];
+  //       // Tag data for to dropdowns:
+  //       ajax(`/tags.json`).then(({ extras }) => {
+  //         const tagGroups = extras.tag_groups;
+  //         const productLabels = [];
 
-          const productsTagGroup = tagGroups.find(
-            (t) => t.name === siteSettings.cribl_product_tag_group
-          );
+  //         const productsTagGroup = tagGroups.find(
+  //           (t) => t.name === siteSettings.cribl_product_tag_group
+  //         );
 
-          const products = productsTagGroup.tags;
+  //         const products = productsTagGroup.tags;
 
-          products.forEach((product) => {
-            const productVersions = tagGroups.find(
-              (t) => t.name === undasherize(product.text)
-            );
+  //         products.forEach((product) => {
+  //           const productVersions = tagGroups.find(
+  //             (t) => t.name === undasherize(product.text)
+  //           );
 
-            product.versions = productVersions.tags;
-            product.title = productVersions.name;
-            productLabels.push(product.id);
-          });
+  //           product.versions = productVersions.tags;
+  //           product.title = productVersions.name;
+  //           productLabels.push(product.id);
+  //         });
 
-          this.set("products", products);
-          this.set("productLabels", productLabels);
+  //         this.set("products", products);
+  //         this.set("productLabels", productLabels);
 
-          if (isDefined(model.product) && arrayNotEmpty(model.product)) {
-            const versions = findProductVersions(
-              component.products,
-              model.product
-            );
-            this.set("productVersions", versions);
-            this.set("showVersions", true);
-          }
-        });
+  //         if (isDefined(model.product) && arrayNotEmpty(model.product)) {
+  //           const versions = findProductVersions(
+  //             component.products,
+  //             model.product
+  //           );
+  //           this.set("productVersions", versions);
+  //           this.set("showVersions", true);
+  //         }
+  //       });
 
-        const controller = getOwner(this).lookup("controller:composer");
-        component.set("productValidation", controller.get("productValidation"));
-        component.set("versionValidation", controller.get("versionValidation"));
-        controller.addObserver("productValidation", () => {
-          if (this._state === "destroying") {
-            return;
-          }
-          component.set(
-            "productValidation",
-            controller.get("productValidation")
-          );
-        });
+  //       const controller = getOwner(this).lookup("controller:composer");
+  //       component.set("productValidation", controller.get("productValidation"));
+  //       component.set("versionValidation", controller.get("versionValidation"));
+  //       controller.addObserver("productValidation", () => {
+  //         if (this._state === "destroying") {
+  //           return;
+  //         }
+  //         component.set(
+  //           "productValidation",
+  //           controller.get("productValidation")
+  //         );
+  //       });
 
-        controller.addObserver("versionValidation", () => {
-          if (this._state === "destroying") {
-            return;
-          }
-          component.set(
-            "versionValidation",
-            controller.get("versionValidation")
-          );
-        });
-      },
+  //       controller.addObserver("versionValidation", () => {
+  //         if (this._state === "destroying") {
+  //           return;
+  //         }
+  //         component.set(
+  //           "versionValidation",
+  //           controller.get("versionValidation")
+  //         );
+  //       });
+  //     },
 
-      actions: {
-        updateProductTags(product) {
-          this.set("selectedProduct", product);
-          this.model.set("product", product);
-          this.model.set("versions", []);
-          const products = this.get("products");
+  //     actions: {
+  //       updateProductTags(product) {
+  //         this.set("selectedProduct", product);
+  //         this.model.set("product", product);
+  //         this.model.set("versions", []);
+  //         const products = this.get("products");
 
-          if (isDefined(product) && arrayNotEmpty(product)) {
-            const versions = findProductVersions(products, product);
-            this.set("productVersions", versions);
-            this.set("showVersions", true);
-          }
-        },
+  //         if (isDefined(product) && arrayNotEmpty(product)) {
+  //           const versions = findProductVersions(products, product);
+  //           this.set("productVersions", versions);
+  //           this.set("showVersions", true);
+  //         }
+  //       },
 
-        updateVersionTags(version) {
-          let product = this.get("selectedProduct");
-          this.model.set("versions", version);
-        },
-      },
-    }
-  );
+  //       updateVersionTags(version) {
+  //         let product = this.get("selectedProduct");
+  //         this.model.set("versions", version);
+  //       },
+  //     },
+  //   }
+  // );
 
   api.modifyClass("model:composer", {
     pluginId: PLUGIN_ID,
@@ -158,102 +159,103 @@ export default apiInitializer("0.11.1", (api) => {
     },
   });
 
-  api.registerConnectorClass(
-    "edit-topic",
-    "edit-topic-product-version-fields",
-    {
-      setupComponent(attrs, component) {
-        const model = attrs.model;
+  // TODO Move to separate:
+  // api.registerConnectorClass(
+  //   "edit-topic",
+  //   "edit-topic-product-version-fields",
+  //   {
+  //     setupComponent(attrs, component) {
+  //       const model = attrs.model;
 
-        ajax(`/tags.json`).then(({ extras }) => {
-          const tagGroups = extras.tag_groups;
-          const productLabels = [];
+  //       ajax(`/tags.json`).then(({ extras }) => {
+  //         const tagGroups = extras.tag_groups;
+  //         const productLabels = [];
 
-          const productsTagGroup = tagGroups.find(
-            (t) => t.name === siteSettings.cribl_product_tag_group
-          );
+  //         const productsTagGroup = tagGroups.find(
+  //           (t) => t.name === siteSettings.cribl_product_tag_group
+  //         );
 
-          const products = productsTagGroup.tags;
+  //         const products = productsTagGroup.tags;
 
-          products.forEach((product) => {
-            const productVersions = tagGroups.find(
-              (t) => t.name === undasherize(product.text)
-            );
+  //         products.forEach((product) => {
+  //           const productVersions = tagGroups.find(
+  //             (t) => t.name === undasherize(product.text)
+  //           );
 
-            product.versions = productVersions.tags;
-            product.title = productVersions.name;
-            productLabels.push(product.id);
-          });
+  //           product.versions = productVersions.tags;
+  //           product.title = productVersions.name;
+  //           productLabels.push(product.id);
+  //         });
 
-          this.set("products", products);
-          this.set("productLabels", productLabels);
+  //         this.set("products", products);
+  //         this.set("productLabels", productLabels);
 
-          if (isDefined(model.product) && arrayNotEmpty(model.product)) {
-            const versions = findProductVersions(
-              component.products,
-              model.product
-            );
-            this.set("productVersions", versions);
-            this.set("showVersions", true);
-          }
-        });
+  //         if (isDefined(model.product) && arrayNotEmpty(model.product)) {
+  //           const versions = findProductVersions(
+  //             component.products,
+  //             model.product
+  //           );
+  //           this.set("productVersions", versions);
+  //           this.set("showVersions", true);
+  //         }
+  //       });
 
-        component.set("product", model.get("product"));
-        component.set("versions", model.get("versions"));
+  //       component.set("product", model.get("product"));
+  //       component.set("versions", model.get("versions"));
 
-        const controller = getOwner(this).lookup("controller:topic");
-        component.set("productValidation", controller.get("productValidation"));
-        component.set("versionValidation", controller.get("versionValidation"));
-        controller.addObserver("productValidation", () => {
-          if (this._state === "destroying") {
-            return;
-          }
-          component.set(
-            "productValidation",
-            controller.get("productValidation")
-          );
-        });
+  //       const controller = getOwner(this).lookup("controller:topic");
+  //       component.set("productValidation", controller.get("productValidation"));
+  //       component.set("versionValidation", controller.get("versionValidation"));
+  //       controller.addObserver("productValidation", () => {
+  //         if (this._state === "destroying") {
+  //           return;
+  //         }
+  //         component.set(
+  //           "productValidation",
+  //           controller.get("productValidation")
+  //         );
+  //       });
 
-        controller.addObserver("versionValidation", () => {
-          if (this._state === "destroying") {
-            return;
-          }
-          component.set(
-            "versionValidation",
-            controller.get("versionValidation")
-          );
-        });
-      },
+  //       controller.addObserver("versionValidation", () => {
+  //         if (this._state === "destroying") {
+  //           return;
+  //         }
+  //         component.set(
+  //           "versionValidation",
+  //           controller.get("versionValidation")
+  //         );
+  //       });
+  //     },
 
-      actions: {
-        updateProductTags(product) {
-          this.set("selectedProduct", product);
-          this.model.set("product", product);
-          this.set("buffered.product", product);
+  //     actions: {
+  //       updateProductTags(product) {
+  //         this.set("selectedProduct", product);
+  //         this.model.set("product", product);
+  //         this.set("buffered.product", product);
 
-          this.model.set("versions", []);
-          const products = this.get("products");
+  //         this.model.set("versions", []);
+  //         const products = this.get("products");
 
-          if (isDefined(product) && arrayNotEmpty(product)) {
-            const versions = findProductVersions(products, product);
-            this.set("productVersions", versions);
-            this.set("showVersions", true);
-          }
-        },
+  //         if (isDefined(product) && arrayNotEmpty(product)) {
+  //           const versions = findProductVersions(products, product);
+  //           this.set("productVersions", versions);
+  //           this.set("showVersions", true);
+  //         }
+  //       },
 
-        updateVersionTags(version) {
-          let product = this.get("selectedProduct");
+  //       updateVersionTags(version) {
+  //         let product = this.get("selectedProduct");
 
-          this.model.set("versions", version);
-          this.set("buffered.versions", version);
-        },
+  //         this.model.set("versions", version);
+  //         this.set("buffered.versions", version);
+  //       },
 
-        updatePlainTags(tags) {
-          this.set("buffered.plainTags", tags);
-        },
-      },
-    }
-  );
+  //       updatePlainTags(tags) {
+  //         this.set("buffered.plainTags", tags);
+  //       },
+  //     },
+  //   }
+  // );
 
   api.modifyClass("controller:topic", {
     pluginId: PLUGIN_ID,

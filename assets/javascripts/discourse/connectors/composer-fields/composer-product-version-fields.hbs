@@ -1,21 +1,20 @@
 {{#unless model.replyingToTopic}}
   {{multi-select
-    content=productLabels
-    valueProperty=null
-    nameProperty=null
-    closeOnChange=true
+    content=products
+    valueProperty="name"
+    nameProperty="name"
     value=model.product
     onChange=(action "updateProductTags")
-    options=(hash none="cribl_tiered_tagging.product.none" maximum=1)
+    options=(hash none="cribl_tiered_tagging.product.none")
   }}
   {{popup-input-tip validation=productValidation}}
 
   {{#if showVersions}}
     {{multi-select
-      content=productVersions
-      valueProperty=null
-      nameProperty=null
-      value=model.versions
+      content=versions
+      valueProperty="name"
+      nameProperty="name"
+      value=model.version
       onChange=(action "updateVersionTags")
       options=(hash none="cribl_tiered_tagging.version.none")
     }}
