@@ -1,12 +1,11 @@
 import EmberObject from "@ember/object";
-import { getOwner } from "discourse-common/lib/get-owner";
 import discourseComputed from "discourse-common/utils/decorators";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { apiInitializer } from "discourse/lib/api";
 import showModal from "discourse/lib/show-modal";
 import I18n from "I18n";
-import { arrayNotEmpty, isDefined, undasherize } from "../lib/field-helpers";
+import { arrayNotEmpty, isDefined } from "../lib/field-helpers";
 
 export default apiInitializer("0.11.1", (api) => {
   const PLUGIN_ID = "cribl-tiered-tagging";
@@ -20,6 +19,7 @@ export default apiInitializer("0.11.1", (api) => {
   api.modifyClass("model:composer", {
     pluginId: PLUGIN_ID,
 
+    // eslint-disable-next-line no-unused-vars
     save(opts) {
       const product = this.product;
       const versions = this.versions;
@@ -57,9 +57,16 @@ export default apiInitializer("0.11.1", (api) => {
   api.modifyClass("controller:composer", {
     pluginId: PLUGIN_ID,
 
+    save() {
+      if (!this.get("productValidation") && !this.get("versionValidation")) {
+        this._super(...arguments);
+      } else {
+        this.set("lastValidatedAt", Date.now());
+      }
+    },
+
     @discourseComputed("model.product", "lastValidatedAt")
     productValidation(product, lastValidatedAt) {
-      console.log("product", product);
       if (!isDefined(product) || !arrayNotEmpty(product)) {
         return EmberObject.create({
           failed: true,

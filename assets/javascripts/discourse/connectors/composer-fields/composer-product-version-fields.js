@@ -3,6 +3,7 @@ import {
   resetProperties,
   setProductProps,
 } from "../../lib/product-helpers";
+import { getOwner } from "discourse-common/lib/get-owner";
 
 export default {
   shouldRender(args, component) {
@@ -19,6 +20,24 @@ export default {
         plainTags: component.model.topic.plainTags,
       });
     }
+
+    const controller = getOwner(this).lookup("controller:composer");
+    component.set("productValidation", controller.get("productValidation"));
+    component.set("versionValidation", controller.get("versionValidation"));
+
+    controller.addObserver("productValidation", () => {
+      if (this._state === "destroying") {
+        return;
+      }
+      component.set("productValidation", controller.get("productValidation"));
+    });
+
+    controller.addObserver("versionValidation", () => {
+      if (this._state === "destroying") {
+        return;
+      }
+      component.set("versionValidation", controller.get("versionValidation"));
+    });
   },
 
   actions: {
