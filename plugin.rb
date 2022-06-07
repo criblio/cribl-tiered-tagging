@@ -2,7 +2,7 @@
 
 # name: cribl-tiered-tagging
 # about: Discourse plugin require Product and Version tagging when posting
-# version: 1.0
+# version: 1.1
 # authors: Keegan George
 # contact email: keegan@pavilion.tech
 # url: https://github.com/paviliondev/cribl-tiered-tagging
@@ -23,7 +23,7 @@ after_initialize do
 
   fields = [
     { name: 'product', type: 'json' },
-    { name: 'versions', type: 'json'},
+    { name: 'versions', type: 'json' },
     { name: 'plainTags', type: 'json' }
   ]
 
