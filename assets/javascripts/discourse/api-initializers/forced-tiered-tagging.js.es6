@@ -58,6 +58,10 @@ export default apiInitializer("0.11.1", (api) => {
     pluginId: PLUGIN_ID,
 
     save() {
+      if (this.model.replyingToTopic) {
+        this._super(...arguments);
+      }
+
       if (!this.get("productValidation") && !this.get("versionValidation")) {
         this._super(...arguments);
       } else {
